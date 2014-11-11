@@ -1,0 +1,15 @@
+{>header data-controller="home" data-action="error" /}
+
+<div class="row">
+    <div class="col-xs-12">
+        <h1>{message}<small>{error.status}</small></h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        {error.stack}
+    </div>
+</div>
+
+{>footer /}

@@ -26,20 +26,25 @@ var dust = require('dustjs-linkedin');
 require('dustjs-helpers');
 var consolidate = require('consolidate');
 require('../lib/dust-helpers.js')( dust );
+var dbBootstrap = require('../lib/db-bootstrap');
 
 
 // LOAD CONFIGURATION
 config
     .setOptions( { debug: true } )
     .findEnvironment({ env: 'ENVIRONMENT', default:'dev' })
-    .useFile( 'config/common.json' )
-    .when(['dev']).useFile( 'config/development.json' )
-    .when(['prod', 'production', 'stage']).useFile( 'config/production.json' );
+    .useObject( require('../config/common') )
+    .when(['dev']).useObject( require('../config/development') )
+    .when(['prod', 'production', 'stage']).useObject( require('../config/production') );
 
 console.log( "Loaded Configuration: ", config.getEnvironment() );
 
+// Must be after configuration is loaded
+var db = dbBootstrap.connect();
 
 app.set('views', path.join(__dirname, '../views'));
+app.set('showStackError', true);
+
 app.engine('dust', consolidate.dust );
 app.set('view engine', 'dust');
 
@@ -51,6 +56,7 @@ app.use( bodyParser.json() );
 app.use( bodyParser.urlencoded({ extended: false }) );
 app.use( cookieParser() );
 app.use( session( { secret: "topsecret", saveUninitialized: true, resave: true } ) );
+app.use( dbBootstrap.mongoExpressSession() );
 
 app.use( lusca({
     csrf: true,

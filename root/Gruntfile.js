@@ -7,7 +7,7 @@ module.exports = function( grunt ){
 	grunt.initConfig({
 
 		pkg: grunt.file.readJSON('package.json'),
-        commonConfig: grunt.file.readJSON('config/common.json'),
+		commonConfig: require('./config/common'),
         
 		less: {
 			src: {

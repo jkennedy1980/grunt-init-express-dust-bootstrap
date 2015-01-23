@@ -41,6 +41,7 @@ exports.template = function( grunt, init, done ){
 		init.prompt('author_url'),
 		init.prompt('node_version', '>= 0.10.0'),
 		init.prompt('client_js_module_name', 'COOLAPP' ),
+		init.prompt('mongo_db_name', 'CoolDB' )
 
 	], function( err, props ){
 
@@ -71,7 +72,9 @@ exports.template = function( grunt, init, done ){
 			"consolidate": "~0.10.0",
             "moment": "~2.9.0",
             "lusca": "~1.0.2",
-            "pony-config": "~0.1.5"
+            "pony-config": "~0.1.5",
+			"mongoose": "~3.8.21",
+			"connect-mongo": "~0.6.0"
 		};
 
 		props.devDependencies = {

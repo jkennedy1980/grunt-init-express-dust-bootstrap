@@ -7,7 +7,8 @@ module.exports = function( grunt ){
 	grunt.initConfig({
 
 		pkg: grunt.file.readJSON('package.json'),
-
+        commonConfig: grunt.file.readJSON('config/common.json'),
+        
 		less: {
 			src: {
 				options: {
@@ -53,21 +54,7 @@ module.exports = function( grunt ){
 			},
 			clientjs: {
 				files: {
-					'public/js/main.min.js': [
-						'clientjs/bootstrap/transition.js',
-						'clientjs/bootstrap/alert.js',
-						'clientjs/bootstrap/button.js',
-						'clientjs/bootstrap/carousel.js',
-						'clientjs/bootstrap/collapse.js',
-						'clientjs/bootstrap/dropdown.js',
-						'clientjs/bootstrap/modal.js',
-						'clientjs/bootstrap/tooltip.js',
-						'clientjs/bootstrap/popover.js',
-						'clientjs/bootstrap/scrollspy.js',
-						'clientjs/bootstrap/tab.js',
-						'clientjs/bootstrap/affix.js',
-						'clientjs/main.js'
-					]
+					'public/js/dist/main.min.js': '<%= commonConfig.scriptsToMinify %>'
 				}
 			}
 		},
@@ -79,15 +66,15 @@ module.exports = function( grunt ){
 					src: ['routes/**/*.js', 'lib/**/*.js', 'apps/**/*.js']
 				},
 				options: {
-					config: "config/eslint-node.json"
+					config: "config/eslint/eslint-node.json"
 				}
 			},
 			browserFiles: {
 				files: {
-					src: ['clientjs/*.js'] // use ignores to skip bootstrap once grunt-eslint supports it
+					src: ['public/js/*.js'] // use ignores to skip bootstrap once grunt-eslint supports it
 				},
 				options: {
-					config: "config/eslint-browser.json"
+					config: "config/eslint/eslint-browser.json"
 				}
 			}
 		},
@@ -98,7 +85,7 @@ module.exports = function( grunt ){
 
 		watch: {
 			clientjs: {
-				files: ['clientjs/*.js'],
+				files: ['public/js/*.js'],
 				tasks: ['uglify'],
 			},
 			less: {

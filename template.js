@@ -40,7 +40,7 @@ exports.template = function( grunt, init, done ){
 		init.prompt('author_email'),
 		init.prompt('author_url'),
 		init.prompt('node_version', '>= 0.10.0'),
-		init.prompt('js_module_name_space', 'MYAPP'),
+		init.prompt('client_js_module_name', 'COOLAPP' ),
 
 	], function( err, props ){
 
@@ -50,41 +50,43 @@ exports.template = function( grunt, init, done ){
 
 		props.scripts = {
 			"start": "node app/app.js",
-			"sup": "supervisor -e js,json,html app/app.js",
+			"sup": "supervisor -e js,json,html app/app.js"
 		};
 
 		props.dependencies = {
-			"express": "~4.10.2",
-			"debug": "~2.1.0",
+			"express": "~4.11.1",
+			"debug": "~2.1.1",
 			"underscore": "~1.7.0",
-			"request": "~2.47.0",
+			"request": "~2.51.0",
 			"async": "~0.9.0",
-			"moment": "~2.8.3",
 			"connect-flash": "~0.1.1",
-			"serve-favicon": "~2.1.6",
+			"serve-favicon": "~2.2.0",
 			"colors": "~1.0.3",
-			"morgan": "~1.5.0",
+			"morgan": "~1.5.1",
 			"cookie-parser": "~1.3.3",
-			"body-parser": "~1.9.2",
-			"express-session": "~1.9.1",
-			"dustjs-linkedin": "~2.5.0",
-			"dustjs-helpers": "~1.4.0",
-			"adaro": "~0.1.5"
+			"body-parser": "~1.10.2",
+			"express-session": "~1.10.1",
+			"dustjs-linkedin": "~2.5.1",
+			"dustjs-helpers": "~1.5.0",
+			"consolidate": "~0.10.0",
+            "moment": "~2.9.0",
+            "lusca": "~1.0.2",
+            "pony-config": "~0.1.5"
 		};
 
 		props.devDependencies = {
 			"grunt": "~0.4.5",
-			"load-grunt-tasks": "~1.0.0",
+			"load-grunt-tasks": "~3.0.0",
 			"grunt-contrib-watch": "~0.6.1",
-			"grunt-contrib-less": "~0.12.0",
-			"grunt-contrib-uglify": "~0.6.0",
-			"grunt-contrib-csslint": "~0.3.1",
-			"grunt-contrib-cssmin": "~0.10.0",
-			"grunt-eslint": "~2.0.0",
+			"grunt-contrib-less": "~1.0.0",
+			"grunt-contrib-uglify": "~0.7.0",
+			"grunt-contrib-csslint": "~0.4.0",
+			"grunt-contrib-cssmin": "~0.11.0",
+			"grunt-eslint": "~4.0.0",
 			"grunt-simple-mocha": "~0.4.0",
-			"mocha": "~2.0.1",
+			"mocha": "~2.1.0",
 			"grunt-open": "~0.2.3",
-			"grunt-retire": "~0.3.1",
+			"grunt-retire": "~0.3.7",
 			"grunt-supervisor": "~0.2.4"
 		};
 

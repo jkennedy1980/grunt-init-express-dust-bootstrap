@@ -19,69 +19,69 @@ var requireMany = require('../lib/requireMany.js');
 var flash = require('connect-flash');
 var colors = require('colors');
 var app = express();
-var dustjs = require('adaro');
+var lusca = require('lusca');
+var config = require('pony-config');
+var middleware = require('../lib/app-middleware');
+var dust = require('dustjs-linkedin');
+require('dustjs-helpers');
+var consolidate = require('consolidate');
+require('../lib/dust-helpers.js')( dust );
 
 
-var port = process.env.PORT || 3000;
+// LOAD CONFIGURATION
+config
+    .setOptions( { debug: true } )
+    .findEnvironment({ env: 'ENVIRONMENT', default:'dev' })
+    .useFile( 'config/common.json' )
+    .when(['dev']).useFile( 'config/development.json' )
+    .when(['prod', 'production', 'stage']).useFile( 'config/production.json' );
+
+console.log( "Loaded Configuration: ", config.getEnvironment() );
 
 
-// view engine setup
 app.set('views', path.join(__dirname, '../views'));
-app.engine('dust', dustjs.dust({ cache: false }));
+app.engine('dust', consolidate.dust );
 app.set('view engine', 'dust');
 
-app.use(express.static(path.join(__dirname, '../public')));
-app.use(favicon( path.join(__dirname, '../public/images/favicon.ico')));
-app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.disable( 'x-powered-by' );
+app.use( express.static(path.join(__dirname, '../public')) );
+app.use( favicon( path.join(__dirname, '../public/images/favicon.ico')) );
+app.use( logger('dev') );
+app.use( bodyParser.json() );
+app.use( bodyParser.urlencoded({ extended: false }) );
+app.use( cookieParser() );
+app.use( session( { secret: "topsecret", saveUninitialized: true, resave: true } ) );
 
-// FLASH MESSAGES
-app.use(cookieParser());
-app.use(session( { secret: "topsecret", saveUninitialized: true, resave: true } ));
-app.use(flash());
+app.use( lusca({
+    csrf: true,
+    csp: {
+        policy: {
+            'default-src': '\'self\' *.googleapis.com',
+            'img-src': '\'self\'',
+            'script-src': '\'self\' \'unsafe-inline\' *.googleapis.com',
+            'style-src': '\'self\' \'unsafe-inline\''
+        }
+    },
+    xframe: 'SAMEORIGIN',
+    p3p: false,
+    hsts: { maxAge: 31536000, includeSubDomains: true },
+    xssProtection: true
+}));
 
-// LOAD ROUTES
+app.use( flash() );
+app.use( middleware.localize );
+
+
+// LOAD THANGS FROM THE /routes DIRECTORY
 var loadedRoutes = requireMany( '../routes' );
 loadedRoutes.apply( app );
 
-
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-    var err = new Error('Not Found');
-    err.status = 404;
-    next(err);
-});
+app.use( middleware.fourOhFour );       // Needs to be after all routes are loaded
+app.use( middleware.unhandledError );   // Needs to be the last middleware on the stack
 
 
-// development error handler
-// will print stacktrace
-if (app.get('env') === 'development') {
-    app.use(function(err, req, res, next) {
-        res.status(err.status || 500);
-        res.render('error', {
-            message: err.message,
-            error: err
-        });
-    });
-}
-
-// production error handler
-// no stacktraces leaked to user
-app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-        message: err.message,
-        error: {}
-    });
-});
-
-
-
-app.set( 'port', port );
+app.set( 'port', config.get("port") );
 
 var server = app.listen( app.get('port'), function(){
-    debug('Express server listening on port ' + server.address().port);
+    debug( 'Express server listening on port ' + server.address().port );
 });
-
-module.exports = app;

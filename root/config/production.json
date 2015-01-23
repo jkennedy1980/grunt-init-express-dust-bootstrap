@@ -1,0 +1,4 @@
+{
+  "anEnviromentSpecificValue": "Hey there production!",
+  "useMinifiedJs": true
+}

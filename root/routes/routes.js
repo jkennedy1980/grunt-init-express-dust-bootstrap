@@ -18,7 +18,7 @@
         
         var hello = new Hello();
         hello.message = testInput;
-        hello.save( function( error, hello ){
+        hello.save( function( error, updatedHello ){
             if( error ){
                 req.flash( 'error', 'Oops!' + (error.message || error) );
             }else{

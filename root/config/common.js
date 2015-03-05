@@ -4,7 +4,7 @@
   module.exports = {
     port: process.env.PORT || 3000,
     mongo: {
-      connectionString: (process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || 'mongodb://localhost') + '/{%= mongo_db_name %}'
+      connectionString: (process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || 'mongodb://localhost/{%= mongo_db_name %}')
     },
     sessionSecret: "waySecretDude",
     scriptsToMinify: [
